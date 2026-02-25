@@ -1,4 +1,4 @@
-![Banner](https://github.com/user-attachments/assets/ae866405-4706-4864-b488-d4c390a1eeb0")
+![Banner](https://github.com/user-attachments/assets/e1b41715-e759-42c3-9f97-a3bef2b7e5b9)
 # About
 **DTRX Hashmap** is a C++ compatible, single header-file library written in C99 that implements a generic, high-level-like hashmap. It was built for use in personal projects, that prioritize simplicity and ease of use over raw performance.
 
@@ -210,12 +210,12 @@ To solve these problems, a trick with text substitution is used: the **inner** m
 **For example:**
 *   This call **WITH** additional arguments from the [test.c](HERE) file:
     * `dtrx_hm_rinsert(hm,rkey,cdp,"%cb %fp2 %fp1",&rcb,cdp->strval,cdp->fval,cdp->ip)` will expand into a `dtrx_hm_rinsert_step_two(hm,rkey,cdp,"%cb %fp2 %fp1",&rcb,cdp->strval,cdp->fval,cdp->ip,"\0")` call, placing the formatting string exactly in the position of the `fmt` argument in `dtrx_hm_rinsert_step_two`'s definition.
-        ![image macro 1](https://github.com/user-attachments/assets/8b6af7b4-c5a2-480b-bdee-d2ddabb2b260)
+        ![image macro 1](https://github.com/user-attachments/assets/0367d992-44a6-4c89-aeb3-d6a401ee6293)
 
 
 *   This call **WITHOUT** additional arguments from the [test_h.h](HERE) file:
     * `dtrx_hm_vinsert(hm,"ikey_foo",1,int)` will expand into a `dtrx_hm_vinsert_step_two(hm,"ikey_foo",1,int,"\0")` call, placing an empty `"\0"` string in the place of the `fmt` argument in `dtrx_hm_vinsert_step_two`'s definition. In this case, `__VA_ARGS__` results in an empty expansion because no additional arguments were provided beyond the required ones. 
-        ![image macro 2](https://github.com/user-attachments/assets/4d78d37b-ab09-4d89-9b05-2aba8205bfa7)
+        ![image macro 2](https://github.com/user-attachments/assets/50d4305e-56e9-4919-80db-62a21ae79a1a)
 
 Every variable defined within the scope of those macro expansions starts with the `_macro_` prefix. This is done because these macros will expand in an arbitrary contexts, which creates a risk of name collisions. If the same name is defined both inside and outside of the macro, the inner definition will shadow the outer one due to the nature of text substitution.
 
@@ -497,7 +497,7 @@ note from **section 1** becomes important, because if the memory were allocated 
         Finally, it `NULL`s the entry's "previous entry" field, leaving other fields of the entry as is; they don't matter anymore and are treated as "empty", since the entry was copied over to the new ID. They will be filled with the new entry's data at the actual insertion part at the end of the function, making this entry a valid first entry in the chain. It also prints some debugging information if the `DTRX_DEBUG` flag was specified.
 
         Here's how this logic can be visualized: 
-        ![image 1](https://github.com/user-attachments/assets/ae866405-4706-4864-b488-d4c390a1eeb0)
+        ![image 1](https://github.com/user-attachments/assets/880a595f-76cd-4b90-80fa-d2df7c971852)
     * **(Lines 32-50)**: If the hashes are equal, meaning that the ID is occupied by an entry that is the first in the chain of entries with this hash, the function needs to find the last entry in the chain. 
     
         To do that, it defines another `dtrx__hm_entry *` variable named `l_entry` - a "linked entry" pointer that will be used to descend the chain in a `while(){...}` loop without changing the main entry pointer. In each iteration of this loop, the algorithm:
@@ -511,7 +511,7 @@ note from **section 1** becomes important, because if the memory were allocated 
         Then it assigns the entry to the "next entry" field of `l_entry` and `l_entry` to the "previous entry" field of the entry, adding an additional entry to the end of this entry chain. Just like in the case of different hashes, at this point, the data passed to the function hasn't been inserted yet and the entry pointer just points to an empty slot. It also prints some debugging information if the `DTRX_DEBUG` flag was specified.
         
         Here's how this logic can be visualized: 
-        ![image 2](https://github.com/user-attachments/assets/d4aee426-2f44-4ebd-94d4-5d990361e7de)
+        ![image 2](https://github.com/user-attachments/assets/e98b9dd7-853c-42f1-b2d1-bfa9a27d4e15)
 
 * **Step 4:** On **Lines 52-54**, there's another `DTRX_DEBUG_MODE` macro call for the case where the key is `NULL`, meaning the entry will be the first in its chain and can be added as-is without any manipulation. This part will be removed by the compiler if the corresponding compile flag is not cpecified, allowing for no performance overhead.
 * **Step 5:** Finally, it uses the arguments that were passed to it to fill the corresponding fields of whatever slot the entry pointer points to after all the manipulations from the previous steps; it then returns `DTRX_SUCCESS`.
@@ -698,12 +698,12 @@ This macro takes a pointer to a `dtrx_hm_entry` struct and frees all of its inte
         * If the entry at temporary pointer's address also has a linked entry, it accesses that third entry and redirects its "previous entry" pointer to point to the original entry's address.
         * Assigns the temorary pointer to the entry pointer and leaves it for deletion.
     
-        ![image 3](https://github.com/user-attachments/assets/6cb945cd-62b5-4150-abc9-0fab084644a7)
+        ![image 3](https://github.com/user-attachments/assets/8c063635-10cb-46c9-aeda-54daf4d196be)
     * If the condition for the previous entry is satisfied, meaning that the entry was found somewhere down the chain, the algorithm only relinks the adjacent entries:
         * If the entry has a valid next entry pointer, it bridges its neighbors: the "next entry" pointer of the previous entry is updated to point to the current entry's successor, and vice versa.
         * If the entry doesn't have a valid next entry pointer, it sets the previous entry's "next entry" pointer to `NULL`.
 
-        ![image 4](https://github.com/user-attachments/assets/9a43f321-6d70-4717-b32e-63a0b7f9aa94)
+        ![image 4](https://github.com/user-attachments/assets/127f4ab0-cdee-4eb1-9200-43d665933569)
 * **Step 7:** Finally, the function "removes" the entry by assigning it a statically defined constant `NULL__ENTRY`, which is defined as follows: 
 ```
 1 static const struct dtrx__hm_entry NULL__ENTRY = {0};
