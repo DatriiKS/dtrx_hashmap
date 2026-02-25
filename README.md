@@ -6,7 +6,7 @@ It can also serve as a learning experience for people that are new to C programm
 
 | Table of contents|
 |-------------------|
-|[Quick start]()|
+|[Quick start](https://github.com/DatriiKS/dtrx_hashmap/tree/main?tab=readme-ov-file#quick-start)|
 |[In-detail tutorial]()|
 | [0: Repeatedly used definitions]()|
 |[1: Hashmap creation]()|
