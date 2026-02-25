@@ -1,4 +1,4 @@
-# DTRX Hashmap
+![Banner](https://github.com/user-attachments/assets/ae866405-4706-4864-b488-d4c390a1eeb0")
 # About
 **DTRX Hashmap** is a C++ compatible, single header-file library written in C99 that implements a generic, high-level-like hashmap. It was built for use in personal projects, that prioritize simplicity and ease of use over raw performance.
 
@@ -6,19 +6,19 @@ It can also serve as a learning experience for people that are new to C programm
 
 | Table of contents|
 |-------------------|
-|[Quick start]()|
-|[In-detail tutorial]()|
-| [0: Repeatedly used definitions]()|
-|[1: Hashmap creation]()|
-|[2: Data insertion macros]()|
-|[3: Parsing a formatting string]()|
-|[4: Adding an entry to the hashmap]()|
-|[5: How the actual insertion happens]()|
-|[6: Remapping the hashmap]()|
-|[7: Retrieving a value from the hashmap]()|
-|[8: Removing an entry from the hashmap]()|
-|[9: Deleting the hashmap]()|
-|[10: File structure]()|
+|[Quick start](https://github.com/DatriiKS/dtrx_hashmap/tree/main?tab=readme-ov-file#quick-start)|
+|[In-detail tutorial](https://github.com/DatriiKS/dtrx_hashmap/tree/main?tab=readme-ov-file#in-detail-tutorial)|
+|[0: Repeatedly used definitions](https://github.com/DatriiKS/dtrx_hashmap/tree/main?tab=readme-ov-file#0-repeatedly-used-definitions)|
+|[1: Hashmap creation](https://github.com/DatriiKS/dtrx_hashmap/tree/main?tab=readme-ov-file#1-hashmap-creation)|
+|[2: Data insertion macros](https://github.com/DatriiKS/dtrx_hashmap/tree/main?tab=readme-ov-file#2-data-insertion-macros)|
+|[3: Parsing a formatting string](https://github.com/DatriiKS/dtrx_hashmap/tree/main?tab=readme-ov-file#3-parsing-a-formatting-string)|
+|[4: Adding an entry to the hashmap](https://github.com/DatriiKS/dtrx_hashmap/tree/main?tab=readme-ov-file#4-adding-an-entry-to-the-hashmap)|
+|[5: How the actual insertion happens](https://github.com/DatriiKS/dtrx_hashmap/tree/main?tab=readme-ov-file#5-how-the-actual-insertion-happens)|
+|[6: Remapping the hashmap](https://github.com/DatriiKS/dtrx_hashmap/tree/main?tab=readme-ov-file#6-remapping-the-hashmap)|
+|[7: Retrieving a value from the hashmap](https://github.com/DatriiKS/dtrx_hashmap/tree/main?tab=readme-ov-file#7-retrieving-a-value-from-the-hashmap)|
+|[8: Removing an entry from the hashmap](https://github.com/DatriiKS/dtrx_hashmap/tree/main?tab=readme-ov-file#8-removing-an-entry-from-the-hashmap)|
+|[9: Deleting the hashmap](https://github.com/DatriiKS/dtrx_hashmap/tree/main?tab=readme-ov-file#9-deleting-the-hashmap)|
+|[10: File structure](https://github.com/DatriiKS/dtrx_hashmap/tree/main?tab=readme-ov-file#10-file-structure)|
 
 # Quick start:
 * Get the **dtrx_hashmap.h** file and include it in your program. You can clone the whole repo, which includes 2 test files if you want to visualize how the hashmap works.
@@ -210,12 +210,12 @@ To solve these problems, a trick with text substitution is used: the **inner** m
 **For example:**
 *   This call **WITH** additional arguments from the [test.c](HERE) file:
     * `dtrx_hm_rinsert(hm,rkey,cdp,"%cb %fp2 %fp1",&rcb,cdp->strval,cdp->fval,cdp->ip)` will expand into a `dtrx_hm_rinsert_step_two(hm,rkey,cdp,"%cb %fp2 %fp1",&rcb,cdp->strval,cdp->fval,cdp->ip,"\0")` call, placing the formatting string exactly in the position of the `fmt` argument in `dtrx_hm_rinsert_step_two`'s definition.
-        # Image here
+        ![image macro 1](https://github.com/user-attachments/assets/8b6af7b4-c5a2-480b-bdee-d2ddabb2b260)
 
 
 *   This call **WITHOUT** additional arguments from the [test_h.h](HERE) file:
     * `dtrx_hm_vinsert(hm,"ikey_foo",1,int)` will expand into a `dtrx_hm_vinsert_step_two(hm,"ikey_foo",1,int,"\0")` call, placing an empty `"\0"` string in the place of the `fmt` argument in `dtrx_hm_vinsert_step_two`'s definition. In this case, `__VA_ARGS__` results in an empty expansion because no additional arguments were provided beyond the required ones. 
-        # Image here
+        ![image macro 2](https://github.com/user-attachments/assets/4d78d37b-ab09-4d89-9b05-2aba8205bfa7)
 
 Every variable defined within the scope of those macro expansions starts with the `_macro_` prefix. This is done because these macros will expand in an arbitrary contexts, which creates a risk of name collisions. If the same name is defined both inside and outside of the macro, the inner definition will shadow the outer one due to the nature of text substitution.
 
@@ -497,8 +497,7 @@ note from **section 1** becomes important, because if the memory were allocated 
         Finally, it `NULL`s the entry's "previous entry" field, leaving other fields of the entry as is; they don't matter anymore and are treated as "empty", since the entry was copied over to the new ID. They will be filled with the new entry's data at the actual insertion part at the end of the function, making this entry a valid first entry in the chain. It also prints some debugging information if the `DTRX_DEBUG` flag was specified.
 
         Here's how this logic can be visualized: 
-        ## IMAGE HERE
-
+        ![image 1](https://github.com/user-attachments/assets/ae866405-4706-4864-b488-d4c390a1eeb0)
     * **(Lines 32-50)**: If the hashes are equal, meaning that the ID is occupied by an entry that is the first in the chain of entries with this hash, the function needs to find the last entry in the chain. 
     
         To do that, it defines another `dtrx__hm_entry *` variable named `l_entry` - a "linked entry" pointer that will be used to descend the chain in a `while(){...}` loop without changing the main entry pointer. In each iteration of this loop, the algorithm:
@@ -512,7 +511,7 @@ note from **section 1** becomes important, because if the memory were allocated 
         Then it assigns the entry to the "next entry" field of `l_entry` and `l_entry` to the "previous entry" field of the entry, adding an additional entry to the end of this entry chain. Just like in the case of different hashes, at this point, the data passed to the function hasn't been inserted yet and the entry pointer just points to an empty slot. It also prints some debugging information if the `DTRX_DEBUG` flag was specified.
         
         Here's how this logic can be visualized: 
-        ## IMAGE HERE
+        ![image 2](https://github.com/user-attachments/assets/d4aee426-2f44-4ebd-94d4-5d990361e7de)
 
 * **Step 4:** On **Lines 52-54**, there's another `DTRX_DEBUG_MODE` macro call for the case where the key is `NULL`, meaning the entry will be the first in its chain and can be added as-is without any manipulation. This part will be removed by the compiler if the corresponding compile flag is not cpecified, allowing for no performance overhead.
 * **Step 5:** Finally, it uses the arguments that were passed to it to fill the corresponding fields of whatever slot the entry pointer points to after all the manipulations from the previous steps; it then returns `DTRX_SUCCESS`.
@@ -699,12 +698,12 @@ This macro takes a pointer to a `dtrx_hm_entry` struct and frees all of its inte
         * If the entry at temporary pointer's address also has a linked entry, it accesses that third entry and redirects its "previous entry" pointer to point to the original entry's address.
         * Assigns the temorary pointer to the entry pointer and leaves it for deletion.
     
-        ## Image here
+        ![image 3](https://github.com/user-attachments/assets/6cb945cd-62b5-4150-abc9-0fab084644a7)
     * If the condition for the previous entry is satisfied, meaning that the entry was found somewhere down the chain, the algorithm only relinks the adjacent entries:
         * If the entry has a valid next entry pointer, it bridges its neighbors: the "next entry" pointer of the previous entry is updated to point to the current entry's successor, and vice versa.
         * If the entry doesn't have a valid next entry pointer, it sets the previous entry's "next entry" pointer to `NULL`.
 
-        ## Image here
+        ![image 4](https://github.com/user-attachments/assets/9a43f321-6d70-4717-b32e-63a0b7f9aa94)
 * **Step 7:** Finally, the function "removes" the entry by assigning it a statically defined constant `NULL__ENTRY`, which is defined as follows: 
 ```
 1 static const struct dtrx__hm_entry NULL__ENTRY = {0};
