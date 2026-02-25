@@ -6,7 +6,7 @@ It can also serve as a learning experience for people that are new to C programm
 
 | Table of contents|
 |-------------------|
-|[Quick start](https://github.com/DatriiKS/dtrx_hashmap/tree/main?tab=readme-ov-file#quick-start)|
+|[Quick start]()|
 |[In-detail tutorial]()|
 | [0: Repeatedly used definitions]()|
 |[1: Hashmap creation]()|
@@ -19,9 +19,11 @@ It can also serve as a learning experience for people that are new to C programm
 |[8: Removing an entry from the hashmap]()|
 |[9: Deleting the hashmap]()|
 |[10: File structure]()|
+
 # Quick start:
-* Get the file and include it in your program. You can clone the whole repo, which includes 2 test files if you want to visualize how the hashmap works.
-* Define a `#DTRX_HM_IMPLEMENTATION` implementation guard in the main file of your program.
+* Get the **dtrx_hashmap.h** file and include it in your program. You can clone the whole repo, which includes 2 test files if you want to visualize how the hashmap works.
+* **To simply use** the library no specific compilation flags are required. **To see the visualization** of each step, compile the program with the `-DDTRX_DEBUG` flag.
+* Define a `#DTRX_HM_IMPLEMENTATION` implementation macro in the main file of your program.
 * To **create a hashmap** use the `dtrx_new_hashmap(<size>,<remap_factor>)` function.
 * To **insert a pointer** use `dtrx_hm_rinsert(<hm *>,const char *<key>,<val *>,...<format_str>,<data according to format_str>)` to perform a (**reference**)insert. 
 This call will isnert a pointer and `NULL` it, to avoid any change of the data inside on accident by accessing that poiner. If for some reason this behaviour is desired - make a copy of the pointer beforehand.
