@@ -686,24 +686,25 @@ So the situation where the hash of the key passed and the hash of the key that t
 12 } while(0) 
 ```
 This macro takes a pointer to a `dtrx_hm_entry` struct and frees all of its internal resources.
-* **Step 6:** Now that the entry only contains auxiliary data regarding its position in the linked list, the function has to relink adjacent nodes before removing it completely:
+
+* **Step 6** Now that the entry only contains auxiliary data regarding its position in the linked list, the function has to relink adjacent nodes before removing it completely:
     * It checks if the entry's "previous entry" field is `NULL`; if it is, meaning that the entry is the first one in its chain, the algorithm also checks its "next entry" field. If the "next entry" field is also `NULL`, meaning that the entry is the only one in its chain at that ID, the entry is left as-is for deletion. 
     * If, however, the entry has a next entry, the function has to move it to the current entry's ID and relink its pointers to keep the linked list integrity and to obey the rule:
     >**An entry with an arbitrary ID is guaranteed to be at that ID in the hashmap's entries array and will be the first element of its chain**.
-    > 
-        To achieve that, the function:
-        * Creates a `dtrx__hm_entry *` temporary pointer and assigns that next entry to it.
-        * Performs a shallow copy from the temporary pointer to the entry. Both entries now contain the same data from the entry's next entry.
-        * Sets the entry's "previous entry" field to `NULL` to mark that this entry is now the first one in the chain.
-        * If the entry at temporary pointer's address also has a linked entry, it accesses that third entry and redirects its "previous entry" pointer to point to the original entry's address.
-        * Assigns the temorary pointer to the entry pointer and leaves it for deletion.
     
-        ![image 3](https://github.com/user-attachments/assets/8c063635-10cb-46c9-aeda-54daf4d196be)
+     To achieve that, the function:
+    * Creates a `dtrx__hm_entry *` temporary pointer and assigns that next entry to it.
+    * Performs a shallow copy from the temporary pointer to the entry. Both entries now contain the same data from the entry's next entry.
+    * Sets the entry's "previous entry" field to `NULL` to mark that this entry is now the first one in the chain.
+    * If the entry at temporary pointer's address also has a linked entry, it accesses that third entry and redirects its "previous entry" pointer to point to the original entry's address.
+    * Assigns the temorary pointer to the entry pointer and leaves it for deletion.
+    
+  ![image 3](https://github.com/user-attachments/assets/8c063635-10cb-46c9-aeda-54daf4d196be)
     * If the condition for the previous entry is satisfied, meaning that the entry was found somewhere down the chain, the algorithm only relinks the adjacent entries:
         * If the entry has a valid next entry pointer, it bridges its neighbors: the "next entry" pointer of the previous entry is updated to point to the current entry's successor, and vice versa.
         * If the entry doesn't have a valid next entry pointer, it sets the previous entry's "next entry" pointer to `NULL`.
 
-        ![image 4](https://github.com/user-attachments/assets/127f4ab0-cdee-4eb1-9200-43d665933569)
+   ![image 4](https://github.com/user-attachments/assets/127f4ab0-cdee-4eb1-9200-43d665933569)
 * **Step 7:** Finally, the function "removes" the entry by assigning it a statically defined constant `NULL__ENTRY`, which is defined as follows: 
 ```
 1 static const struct dtrx__hm_entry NULL__ENTRY = {0};
