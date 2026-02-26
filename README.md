@@ -210,12 +210,12 @@ To solve these problems, a trick with text substitution is used: the **inner** m
 **For example:**
 *   This call **WITH** additional arguments from the [test.c](HERE) file:
     * `dtrx_hm_rinsert(hm,rkey,cdp,"%cb %fp2 %fp1",&rcb,cdp->strval,cdp->fval,cdp->ip)` will expand into a `dtrx_hm_rinsert_step_two(hm,rkey,cdp,"%cb %fp2 %fp1",&rcb,cdp->strval,cdp->fval,cdp->ip,"\0")` call, placing the formatting string exactly in the position of the `fmt` argument in `dtrx_hm_rinsert_step_two`'s definition.
-        ![image macro 1](https://github.com/user-attachments/assets/b6413049-f960-4cba-8883-4f85df2d5196)
+        ![image macro 1](https://github.com/user-attachments/assets/76b29212-1272-469c-ba6a-7f7d15ae9fe8)
 
 
 *   This call **WITHOUT** additional arguments from the [test_h.h](HERE) file:
     * `dtrx_hm_vinsert(hm,"ikey_foo",1,int)` will expand into a `dtrx_hm_vinsert_step_two(hm,"ikey_foo",1,int,"\0")` call, placing an empty `"\0"` string in the place of the `fmt` argument in `dtrx_hm_vinsert_step_two`'s definition. In this case, `__VA_ARGS__` results in an empty expansion because no additional arguments were provided beyond the required ones. 
-        ![image macro 2](https://github.com/user-attachments/assets/32bc1dc7-c8ef-451d-bcb2-6bc4f1ca9c90)
+        ![image macro 2](https://github.com/user-attachments/assets/29a92cc0-32c2-4c35-b035-db5de2194467)
 
 Every variable defined within the scope of those macro expansions starts with the `_macro_` prefix. This is done because these macros will expand in an arbitrary contexts, which creates a risk of name collisions. If the same name is defined both inside and outside of the macro, the inner definition will shadow the outer one due to the nature of text substitution.
 
@@ -686,7 +686,7 @@ This macro takes a pointer to a `dtrx_hm_entry` struct and frees all of its inte
 
 * **Step 6** Now that the entry only contains auxiliary data regarding its position in the linked list, the function has to relink adjacent nodes before removing it completely:
     * It checks if the entry's "previous entry" field is `NULL`; if it is, meaning that the entry is the first one in its chain, the algorithm also checks its "next entry" field. If the "next entry" field is also `NULL`, meaning that the entry is the only one in its chain at that ID, the entry is left as-is for deletion. 
-    * If, however, the entry has a next entry, the function has to move it to the current entry's ID and relink its pointers to keep the linked list integrity and to obey the **An entry with an arbitrary ID is guaranteed to be at that ID in the hashmap's entries array and will be the first element of its chain** rule.
+    * If, however, the entry has a next entry, the function has to move it to the current entry's ID and relink its pointers to keep the linked list integrity and to obey the **"An entry with an arbitrary ID is guaranteed to be at that ID in the hashmap's entries array and will be the first element of its chain"** rule.
       
       To achieve that, the function:
         * Creates a `dtrx__hm_entry *` temporary pointer and assigns that next entry to it.
