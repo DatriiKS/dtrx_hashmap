@@ -688,8 +688,7 @@ This macro takes a pointer to a `dtrx_hm_entry` struct and frees all of its inte
     * It checks if the entry's "previous entry" field is `NULL`; if it is, meaning that the entry is the first one in its chain, the algorithm also checks its "next entry" field. If the "next entry" field is also `NULL`, meaning that the entry is the only one in its chain at that ID, the entry is left as-is for deletion. 
     * If, however, the entry has a next entry, the function has to move it to the current entry's ID and relink its pointers to keep the linked list integrity and to obey the rule:
     >**An entry with an arbitrary ID is guaranteed to be at that ID in the hashmap's entries array and will be the first element of its chain**.
-    
-     To achieve that, the function:
+      To achieve that, the function:
         * Creates a `dtrx__hm_entry *` temporary pointer and assigns that next entry to it.
         * Performs a shallow copy from the temporary pointer to the entry. Both entries now contain the same data from the entry's next entry.
         * Sets the entry's "previous entry" field to `NULL` to mark that this entry is now the first one in the chain.
