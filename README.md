@@ -56,7 +56,7 @@ This call will allocate memory for specified type and perform a shallow copy of 
 
 
 # In-detail tutorial
-The following section will explain how and why this library works as it does. It will be mostly usefull for the people who are just starting to learn C and/or want to know how "generics" can be implemented in this language. This part will provide a deep, almost line-by-line explanation. To simply set up the library and use it, refer to the [Quick start](https://markdownlivepreview.com/) section. 
+The following section will explain how and why this library works as it does. It will be mostly usefull for the people who are just starting to learn C and/or want to know how "generics" can be implemented in this language. This part will provide a deep, almost line-by-line explanation. To simply set up the library and use it, refer to the [Quick start](https://github.com/DatriiKS/dtrx_hashmap?tab=readme-ov-file#quick-start) section. 
 
 ## **0: Repeatedly used definitions**
 Going through this tutorial, multiple different definitions will be repeatedly used, to avoid cluttering the text, they will be listed in this section.
@@ -210,12 +210,12 @@ To solve these problems, a trick with text substitution is used: the **inner** m
 **For example:**
 *   This call **WITH** additional arguments from the [test.c](HERE) file:
     * `dtrx_hm_rinsert(hm,rkey,cdp,"%cb %fp2 %fp1",&rcb,cdp->strval,cdp->fval,cdp->ip)` will expand into a `dtrx_hm_rinsert_step_two(hm,rkey,cdp,"%cb %fp2 %fp1",&rcb,cdp->strval,cdp->fval,cdp->ip,"\0")` call, placing the formatting string exactly in the position of the `fmt` argument in `dtrx_hm_rinsert_step_two`'s definition.
-        ![image macro 1](https://github.com/user-attachments/assets/0367d992-44a6-4c89-aeb3-d6a401ee6293)
+        ![image macro 1](https://github.com/user-attachments/assets/b6413049-f960-4cba-8883-4f85df2d5196)
 
 
 *   This call **WITHOUT** additional arguments from the [test_h.h](HERE) file:
     * `dtrx_hm_vinsert(hm,"ikey_foo",1,int)` will expand into a `dtrx_hm_vinsert_step_two(hm,"ikey_foo",1,int,"\0")` call, placing an empty `"\0"` string in the place of the `fmt` argument in `dtrx_hm_vinsert_step_two`'s definition. In this case, `__VA_ARGS__` results in an empty expansion because no additional arguments were provided beyond the required ones. 
-        ![image macro 2](https://github.com/user-attachments/assets/50d4305e-56e9-4919-80db-62a21ae79a1a)
+        ![image macro 2](https://github.com/user-attachments/assets/32bc1dc7-c8ef-451d-bcb2-6bc4f1ca9c90)
 
 Every variable defined within the scope of those macro expansions starts with the `_macro_` prefix. This is done because these macros will expand in an arbitrary contexts, which creates a risk of name collisions. If the same name is defined both inside and outside of the macro, the inner definition will shadow the outer one due to the nature of text substitution.
 
@@ -338,9 +338,6 @@ Refer to the link above for an in-depth explanation, but to put it simply: a var
         This key is the only one that branches logic if passed multiple times. The parser checks the `info.f_ptrc` counter; if it's zero, meaning that `%fp<number>` key is the first one, the function allocates memory for a pointer that will store the pointers that were passed to the function as arguments. In the case where `info.f_ptrc` is above zero, it `realloc`ates memory to preserve previously assigned pointers and gain space for the new ones.
 
         Once the memory is allocated, the parser increments the `info.f_ptrc` counter and enters a `for(){...}` loop, filling the allocated memory with the pointers that were passed to the function as arguments. Then it assigns the pointer-to-pointers to the `.free_list` field of the `dtrx__va_args_info` struct.
-
-        Here's how the logic for this key looks like:
-        #   Image here
 
     * If the parser finds the `%` sign, but no valid combination of characters following it, it will call the `DTRX_DEBUG_MODE` macro if the `-DDTRX_DEBUG` compile flag was specified. If this compile flag was not specified, lines **37-39** will be effectively removed by the compiler, allowing for no overhead in that case.
     * If the character is anything other than `%`, the function simply increments the counter and continues its `while(){...}` loop.
@@ -693,11 +690,11 @@ This macro takes a pointer to a `dtrx_hm_entry` struct and frees all of its inte
     >**An entry with an arbitrary ID is guaranteed to be at that ID in the hashmap's entries array and will be the first element of its chain**.
     
      To achieve that, the function:
-    * Creates a `dtrx__hm_entry *` temporary pointer and assigns that next entry to it.
-    * Performs a shallow copy from the temporary pointer to the entry. Both entries now contain the same data from the entry's next entry.
-    * Sets the entry's "previous entry" field to `NULL` to mark that this entry is now the first one in the chain.
-    * If the entry at temporary pointer's address also has a linked entry, it accesses that third entry and redirects its "previous entry" pointer to point to the original entry's address.
-    * Assigns the temorary pointer to the entry pointer and leaves it for deletion.
+        * Creates a `dtrx__hm_entry *` temporary pointer and assigns that next entry to it.
+        * Performs a shallow copy from the temporary pointer to the entry. Both entries now contain the same data from the entry's next entry.
+        * Sets the entry's "previous entry" field to `NULL` to mark that this entry is now the first one in the chain.
+        * If the entry at temporary pointer's address also has a linked entry, it accesses that third entry and redirects its "previous entry" pointer to point to the original entry's address.
+        * Assigns the temorary pointer to the entry pointer and leaves it for deletion.
     
   ![image 3](https://github.com/user-attachments/assets/8c063635-10cb-46c9-aeda-54daf4d196be)
     * If the condition for the previous entry is satisfied, meaning that the entry was found somewhere down the chain, the algorithm only relinks the adjacent entries:
@@ -766,7 +763,7 @@ It is also wrapped in a conditional preprocessor block, that looks for the `__cp
 
 * The `DTRX_HM_IMPLEMENTATION` macro is an [stb-style implementation guard](https://github.com/nothings/stb/blob/master/docs/stb_howto.txt). The information at the link pretty much explains everything about that kind of pattern. 
 
-In short, it "splits" the file into declaration and implementation parts. By doing so, it allows the user to `#include` the file in multiple places to access the type and function declarations, but only define them once by defining the implementation guard (in this case, the `DTRX_HM_IMPLEMENTATION) in a single place, thus avoiding redefinition errors. This allows for great flexibility and ease of use on the programmers side. 
+In short, it "splits" the file into declaration and implementation parts. By doing so, it allows the user to `#include` the file in multiple places to access the type and function declarations, but only define them once by defining the implementation guard (in this case, the `DTRX_HM_IMPLEMENTATION`) in a single place, thus avoiding redefinition errors. This allows for great flexibility and ease of use on the programmers side. 
 The `DTRX_HM_IMPLEMENTATION_DONE` macro is a "second line of defence"; it is needed to prevent multiple inclusions by accident.
 
 Apart from looking into the stb libraries, I would also recommend watching [this Tsoding video](https://www.youtube.com/watch?v=kS_GqDp6IT4) to understand the pattern better; it is short and provides a simple visual example.
